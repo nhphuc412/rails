@@ -187,13 +187,6 @@ module ActiveSupport #:nodoc:
         super
       end
 
-      def self.exclude_from(base)
-        base.class_eval do
-          define_method :const_missing, @_const_missing
-          @_const_missing = nil
-        end
-      end
-
       def self.include_into(base)
         base.include(self)
         append_features(base)
@@ -224,16 +217,6 @@ module ActiveSupport #:nodoc:
 
     # Object includes this module.
     module Loadable #:nodoc:
-      def self.exclude_from(base)
-        base.class_eval do
-          define_method(:load, Kernel.instance_method(:load))
-          private :load
-
-          define_method(:require, Kernel.instance_method(:require))
-          private :require
-        end
-      end
-
       def self.include_into(base)
         base.include(self)
 
@@ -325,11 +308,6 @@ module ActiveSupport #:nodoc:
     def hook!
       Loadable.include_into(Object)
       ModuleConstMissing.include_into(Module)
-    end
-
-    def unhook!
-      ModuleConstMissing.exclude_from(Module)
-      Loadable.exclude_from(Object)
     end
 
     def load?

@@ -1097,16 +1097,4 @@ class DependenciesTest < ActiveSupport::TestCase
   def test_hook_called_multiple_times
     assert_nothing_raised { ActiveSupport::Dependencies.hook! }
   end
-
-  def test_load_and_require_stay_private
-    assert_includes Object.private_methods, :load
-    assert_includes Object.private_methods, :require
-
-    ActiveSupport::Dependencies.unhook!
-
-    assert_includes Object.private_methods, :load
-    assert_includes Object.private_methods, :require
-  ensure
-    ActiveSupport::Dependencies.hook!
-  end
 end

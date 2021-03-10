@@ -334,36 +334,6 @@ class ZeitwerkIntegrationTest < ActiveSupport::TestCase
     assert_equal %i(main_autoloader), $zeitwerk_integration_reload_test
   end
 
-  test "unhooks" do
-    boot
-
-    assert_equal Module, Module.method(:const_missing).owner
-    assert_equal :no_op, deps.unhook!
-  end
-
-  test "autoloaders.logger=" do
-    boot
-
-    logger = ->(_msg) { }
-    Rails.autoloaders.logger = logger
-
-    Rails.autoloaders.each do |autoloader|
-      assert_same logger, autoloader.logger
-    end
-
-    Rails.autoloaders.logger = Rails.logger
-
-    Rails.autoloaders.each do |autoloader|
-      assert_same Rails.logger, autoloader.logger
-    end
-
-    Rails.autoloaders.logger = nil
-
-    Rails.autoloaders.each do |autoloader|
-      assert_nil autoloader.logger
-    end
-  end
-
   test "autoloaders.log!" do
     app_file "extras/utils.rb", "module Utils; end"
 
