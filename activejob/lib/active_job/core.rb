@@ -13,6 +13,9 @@ module ActiveJob
       # Job Identifier
       attr_accessor :job_id
 
+      # ID optionally provided by adapter
+      attr_accessor :provider_job_id
+
       # Queue in which the job will reside.
       attr_writer :queue_name
 
@@ -27,6 +30,7 @@ module ActiveJob
       def deserialize(job_data)
         job                      = job_data['job_class'].constantize.new
         job.job_id               = job_data['job_id']
+        job.provider_job_id      = job_data['provider_job_id']
         job.queue_name           = job_data['queue_name']
         job.serialized_arguments = job_data['arguments']
         job.locale               = job_data['locale'] || I18n.locale
@@ -68,6 +72,7 @@ module ActiveJob
       {
         'job_class'  => self.class.name,
         'job_id'     => job_id,
+        'provider_job_id' => provider_job_id,
         'queue_name' => queue_name,
         'arguments'  => serialize_arguments(arguments),
         'locale'     => I18n.locale
